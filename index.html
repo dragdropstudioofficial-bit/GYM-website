@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplement Armour | Premium Fitness Hub</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: #111111;
+            --primary-red: #E63946;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --glass-border: rgba(255, 255, 255, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Scroll Animation --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Header & Typing Effect --- */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            z-index: 1001;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .typewriter-text {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--primary-red);
+            max-width: 0;
+            animation: typing 2.5s steps(25, end) forwards, blink 0.8s infinite;
+        }
+
+        @keyframes typing {
+            from { max-width: 0; }
+            to { max-width: 300px; }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--primary-red); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--primary-red); }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 2px;
+            background-color: var(--text-main);
+            transition: 0.3s;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 5%;
+            overflow: hidden;
+        }
+
+        #bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Bright overlay fix */
+            background: linear-gradient(rgba(5, 5, 5, 0.3), rgba(5, 5, 5, 0.6));
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: 4.5rem;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            background: var(--primary-red);
+            color: white;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: 1px solid var(--primary-red);
+        }
+
+        .btn:hover {
+            background: transparent;
+            color: var(--primary-red);
+            box-shadow: 0 0 20px rgba(230, 57, 70, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* --- Sections --- */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            background: var(--card-bg);
+            padding: 50px 5%;
+            border-bottom: 1px solid var(--glass-border);
+            text-align: center;
+            gap: 20px;
+        }
+
+        .stat-item h2 { font-size: 2.5rem; color: var(--primary-red); font-family: 'Syncopate', sans-serif; }
+        .stat-item p { color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;}
+
+        .about-section {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h2 { font-family: 'Syncopate', sans-serif; font-size: 2.5rem; margin-bottom: 20px; letter-spacing: 2px; }
+        .about-text p { color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem;}
+
+        .products-section { padding: 100px 5%; }
+        .section-title { font-family: 'Syncopate', sans-serif; font-size: 2.5rem; text-align: center; margin-bottom: 60px; letter-spacing: 2px; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card:hover { transform: translateY(-10px); border-color: var(--primary-red); box-shadow: 0 10px 30px rgba(230, 57, 70, 0.1); }
+        .product-img { width: 100%; height: 250px; object-fit: contain; margin-bottom: 20px; transition: transform 0.5s ease; }
+        .product-card:hover .product-img { transform: scale(1.08); }
+
+        .product-category { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .product-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; }
+        .product-price { font-size: 1.4rem; font-weight: 800; color: var(--primary-red); margin-bottom: 20px; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--text-main);
+            color: var(--text-main);
+            padding: 10px 25px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-outline:hover { background: var(--text-main); color: var(--bg-color); }
+
+        .categories { padding: 80px 5%; text-align: center; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 50px; }
+        .category-card { background: var(--card-bg); padding: 40px; border: 1px solid var(--glass-border); transition: 0.4s; border-radius: 8px; }
+        .category-card:hover { border-color: var(--primary-red); transform: translateY(-5px); }
+
+        /* --- Footer --- */
+        footer {
+            background: #000;
+            padding: 80px 5% 40px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col h4 {
+            color: var(--primary-red);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            font-family: 'Syncopate', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-col p, .footer-col a { color: var(--text-muted); text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--primary-red); }
+
+        .footer-bottom { text-align: center; padding-top: 40px; border-top: 1px solid var(--glass-border); color: #444; font-size: 0.8rem; }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 250px;
+                height: 100vh;
+                background: #0d0d0d;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: 0.4s ease-in-out;
+                border-left: 1px solid var(--glass-border);
+            }
+            .nav-links.active { right: 0; }
+            .nav-links a { font-size: 1.2rem; }
+            .typewriter-text { font-size: 0.9rem; }
+            .logo-img { height: 30px; }
+            .hero-content h1 { font-size: 2.8rem; letter-spacing: 1px; }
+            .hero-content p { font-size: 1rem; padding: 0 10px; }
+            .section-title { font-size: 2rem; }
+            .about-text h2 { font-size: 2rem; }
+            .products-section, .about-section, .categories { padding: 60px 5%; }
+            .about-section { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            footer { padding: 50px 5% 30px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <span class="typewriter-text">SUPPLEMENT ARMOUR</span>
+        </a>
+        
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="#home" onclick="toggleMenu()">Home</a>
+            <a href="#about" onclick="toggleMenu()">About</a>
+            <a href="#products" onclick="toggleMenu()">Store</a>
+            <a href="#contact" onclick="toggleMenu()">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="banner.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content reveal">
+            <h1>Limitless<br>Performance</h1>
+            <p>Premium grade supplements designed to push your limits. Fuel your workout with genuine products directly from top global brands.</p>
+            <a href="#products" class="btn">Explore Products</a>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat-item reveal">
+            <h2>50+</h2>
+            <p>Premium Products</p>
+        </div>
+        <div class="stat-item reveal">
+            <h2>100%</h2>
+            <p>Authentic Brands</p>
+        </div>
+        <div class="stat-item reveal">
+            <h2>24H</h2>
+            <p>Delivery Support</p>
+        </div>
+    </div>
+
+    <section class="about-section" id="about">
+        <div class="about-image reveal">
+            <img src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?q=80&w=2069&auto=format&fit=crop" style="width: 100%; border-radius: 8px;" alt="Gym">
+        </div>
+        <div class="about-text reveal">
+            <h2>Fueling Kandy's Elite</h2>
+            <p>At <strong>Supplement Armour</strong>, we believe in performance without compromise. Located in the heart of Kandy, we provide athletes and fitness enthusiasts with high-quality supplements sourced directly from global leaders.</p>
+            <p>From Whey Proteins to Pre-workouts and Fat Burners, our curated collection is designed for those who settle for nothing but the best.</p>
+        </div>
+    </section>
+
+    <section class="products-section" id="products">
+        <h2 class="section-title reveal">Top Sellers</h2>
+        
+        <div class="product-grid">
+            <div class="product-card reveal">
+                <img src="https://target.scene7.com/is/image/Target/GUEST_04220bee-c885-4d45-9657-9896559920f1?wid=300&hei=300&fmt=pjpeg" alt="Whey Protein" class="product-img">
+                <div class="product-category">Whey Protein</div>
+                <h3 class="product-title">Optimum Nutrition Gold Standard</h3>
+                <div class="product-price">Rs. 24,500</div>
+                <button class="btn btn-outline" onclick="orderWhatsApp('Optimum Nutrition Gold Standard')">Order via WhatsApp</button>
+            </div>
+
+            <div class="product-card reveal">
+                <img src="https://megapump.ie/cdn/shop/products/gold-creatine-300g-kevin-levrone.jpg?v=1662417936" alt="Creatine" class="product-img">
+                <div class="product-category">Creatine</div>
+                <h3 class="product-title">Kevin Levrone Gold Creatine</h3>
+                <div class="product-price">Rs. 8,900</div>
+                <button class="btn btn-outline" onclick="orderWhatsApp('Kevin Levrone Gold Creatine')">Order via WhatsApp</button>
+            </div>
+
+            <div class="product-card reveal">
+                <img src="https://ifit-eg.com/wp-content/uploads/2024/01/Cellucor_C4Original_GreenApple_30Servings-min1.png" alt="Pre-Workout" class="product-img">
+                <div class="product-category">Pre-Workout</div>
+                <h3 class="product-title">C4 Original Pre Workout</h3>
+                <div class="product-price">Rs. 11,200</div>
+                <button class="btn btn-outline" onclick="orderWhatsApp('C4 Original Pre Workout')">Order via WhatsApp</button>
+            </div>
+            
+            <div class="product-card reveal">
+                <img src="https://m.media-amazon.com/images/I/61chnopQdRL.jpg" alt="Mass Gainer" class="product-img">
+                <div class="product-category">Mass Gainer</div>
+                <h3 class="product-title">Serious Mass Gainer</h3>
+                <div class="product-price">Rs. 28,000</div>
+                <button class="btn btn-outline" onclick="orderWhatsApp('Serious Mass Gainer')">Order via WhatsApp</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="categories">
+        <h2 class="section-title reveal">Product Categories</h2>
+        <div class="grid-container">
+            <div class="category-card reveal">
+                <h3>Proteins</h3>
+                <p style="color: var(--text-muted); margin-top: 10px;">Isolates, Whey & Blends</p>
+            </div>
+            <div class="category-card reveal">
+                <h3>Performance</h3>
+                <p style="color: var(--text-muted); margin-top: 10px;">Creatine & Pre-workouts</p>
+            </div>
+            <div class="category-card reveal">
+                <h3>Weight Management</h3>
+                <p style="color: var(--text-muted); margin-top: 10px;">Fat Burners & Gainers</p>
+            </div>
+            <div class="category-card reveal">
+                <h3>Wellness</h3>
+                <p style="color: var(--text-muted); margin-top: 10px;">Multivitamins & Aminos</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-grid">
+            <div class="footer-col reveal">
+                <h4>Supplement Armour</h4>
+                <p>Your trusted partner in fitness. We provide only 100% genuine products for maximum results.</p>
+            </div>
+            <div class="footer-col reveal">
+                <h4>Visit Us</h4>
+                <p>No 42, Peradeniya Road,<br>Kandy, Sri Lanka.</p>
+                <p>Open: 9 AM - 8 PM</p>
+            </div>
+            <div class="footer-col reveal">
+                <h4>Contact Info</h4>
+                <p>Phone: +94 70 229 7996</p>
+                <p>Email: supplementarmourlk@gmail.com</p>
+            </div>
+            <div class="footer-col reveal">
+                <h4>Follow Us</h4>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">WhatsApp</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Supplement Armour LK. Developed by Drag Drop Studio (A Product of Moon).
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("active");
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            observer.observe(el);
+        });
+
+        function orderWhatsApp(productName) {
+            var phoneNumber = "94702297996"; 
+            var message = "Hello Supplement Armour, I would like to order: " + productName;
+            var whatsappUrl = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
