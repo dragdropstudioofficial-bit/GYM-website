@@ -9,12 +9,15 @@
     
     <style>
         :root {
-            --bg-color: #050505;
-            --card-bg: #111111;
+            --bg-color: #030303;
             --primary-red: #E63946;
             --text-main: #ffffff;
-            --text-muted: #888888;
-            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-muted: #a1a1a1;
+            
+            /* Professional Liquid Glass (iOS Style) */
+            --glass-bg: rgba(25, 25, 25, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-highlight: rgba(255, 255, 255, 0.01);
         }
 
         * {
@@ -31,11 +34,47 @@
             scroll-behavior: smooth;
         }
 
+        /* --- Professional Liquid Background --- */
+        .liquid-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .liquid-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            animation: orbFloat 30s infinite ease-in-out alternate;
+            will-change: transform;
+        }
+
+        .orb-1 { width: 50vw; height: 50vw; background: var(--primary-red); top: -10%; left: -10%; }
+        .orb-2 { width: 45vw; height: 45vw; background: #6e000a; bottom: -15%; right: -10%; animation-delay: -5s; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5vw, 5vh) scale(1.1); }
+        }
+
+        /* --- iOS Glassmorphism Class --- */
+        .ios-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            background-image: linear-gradient(135deg, var(--glass-highlight) 0%, transparent 100%);
+        }
+
         /* --- Scroll Animation --- */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal.active {
@@ -43,14 +82,14 @@
             transform: translateY(0);
         }
 
-        /* --- Header & Typing Effect --- */
+        /* --- Header & Mobile Menu --- */
         header {
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            background: rgba(5, 5, 5, 0.85);
-            backdrop-filter: blur(12px);
+            background: rgba(5, 5, 5, 0.6);
+            backdrop-filter: blur(20px) saturate(160%);
             border-bottom: 1px solid var(--glass-border);
             padding: 15px 5%;
             display: flex;
@@ -61,20 +100,18 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             text-decoration: none;
             z-index: 1001;
+            max-width: 80%;
+            overflow: hidden;
         }
 
-        .logo-img {
-            height: 40px;
-            width: auto;
-            display: block;
-        }
+        .logo-img { height: 38px; width: auto; transition: height 0.3s; }
 
         .typewriter-text {
             font-family: 'Syncopate', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--text-main);
             overflow: hidden;
@@ -84,47 +121,42 @@
             animation: typing 2.5s steps(25, end) forwards, blink 0.8s infinite;
         }
 
-        @keyframes typing {
-            from { max-width: 0; }
-            to { max-width: 300px; }
-        }
+        @keyframes typing { from { max-width: 0; } to { max-width: 300px; } }
+        @keyframes blink { from, to { border-color: transparent; } 50% { border-color: var(--primary-red); } }
 
-        @keyframes blink {
-            from, to { border-color: transparent; }
-            50% { border-color: var(--primary-red); }
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
+        .nav-links { display: flex; gap: 30px; }
         .nav-links a {
             color: var(--text-main);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: 0.3s ease;
         }
-
         .nav-links a:hover { color: var(--primary-red); }
 
+        /* Professional Mobile Hamburger Icon */
         .hamburger {
             display: none;
             flex-direction: column;
             gap: 6px;
             cursor: pointer;
             z-index: 1001;
+            padding: 5px;
         }
 
         .hamburger span {
-            width: 28px;
+            width: 30px;
             height: 2px;
             background-color: var(--text-main);
-            transition: 0.3s;
+            transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: left center;
         }
+
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; width: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg); }
 
         /* --- Hero Section --- */
         .hero {
@@ -141,36 +173,25 @@
 
         #bg-video {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -1;
+            top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
             transform: translate(-50%, -50%);
             object-fit: cover;
+            z-index: -1;
         }
 
         .hero-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            /* Bright overlay fix */
-            background: linear-gradient(rgba(5, 5, 5, 0.3), rgba(5, 5, 5, 0.6));
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(rgba(3, 3, 3, 0.3), rgba(3, 3, 3, 0.7));
             z-index: 0;
         }
 
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
+        .hero-content { position: relative; z-index: 1; }
         .hero-content h1 {
             font-family: 'Syncopate', sans-serif;
-            font-size: 4.5rem;
+            font-size: clamp(2rem, 8vw, 4.5rem);
             text-transform: uppercase;
             line-height: 1.1;
             margin-bottom: 20px;
@@ -178,12 +199,14 @@
         }
 
         .hero-content p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: #ccc;
             max-width: 600px;
             margin: 0 auto 40px auto;
+            line-height: 1.6;
         }
 
+        /* Hero Button Pulse Animation */
         .btn {
             padding: 16px 40px;
             background: var(--primary-red);
@@ -191,151 +214,260 @@
             text-decoration: none;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: 0.3s;
             display: inline-block;
-            border: 1px solid var(--primary-red);
+            animation: pulseBtn 2s infinite;
         }
 
         .btn:hover {
-            background: transparent;
-            color: var(--primary-red);
-            box-shadow: 0 0 20px rgba(230, 57, 70, 0.3);
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02);
+            animation: none;
+            box-shadow: 0 10px 25px rgba(230, 57, 70, 0.5);
         }
 
-        /* --- Sections --- */
+        @keyframes pulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.6); }
+            70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+        }
+
+        /* --- Partner Brands Marquee Slider (Video Style) --- */
+        .brands-section {
+            background-color: #ffffff;
+            padding: 40px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .brand-title {
+            font-family: 'Syncopate', sans-serif;
+            color: #000000;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .brands-slider {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .brands-slider::before, .brands-slider::after {
+            content: ''; position: absolute; top: 0; width: 80px; height: 100%; z-index: 2;
+        }
+        .brands-slider::before { left: 0; background: linear-gradient(to right, #ffffff, transparent); }
+        .brands-slider::after { right: 0; background: linear-gradient(to left, #ffffff, transparent); }
+
+        .brands-track {
+            display: inline-flex;
+            align-items: center;
+            animation: scrollBrands 20s linear infinite;
+        }
+
+        .brand-logo {
+            height: 50px;
+            margin: 0 40px;
+            object-fit: contain;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes scrollBrands {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* --- Stats Section --- */
         .stats-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            background: var(--card-bg);
+            grid-template-columns: repeat(3, 1fr);
             padding: 50px 5%;
-            border-bottom: 1px solid var(--glass-border);
             text-align: center;
             gap: 20px;
+            margin: 30px 5%;
+            border-radius: 20px;
         }
 
         .stat-item h2 { font-size: 2.5rem; color: var(--primary-red); font-family: 'Syncopate', sans-serif; }
-        .stat-item p { color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;}
+        .stat-item p { color: var(--text-main); text-transform: uppercase; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;}
 
+        /* --- About Section --- */
         .about-section {
-            padding: 100px 5%;
+            padding: 80px 5%;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: center;
         }
 
+        .about-image img { width: 100%; border-radius: 20px; }
         .about-text h2 { font-family: 'Syncopate', sans-serif; font-size: 2.5rem; margin-bottom: 20px; letter-spacing: 2px; }
-        .about-text p { color: var(--text-muted); margin-bottom: 20px; font-size: 1.1rem;}
+        .about-text p { color: var(--text-main); margin-bottom: 20px; font-size: 1.1rem; line-height: 1.8; opacity: 0.9;}
 
-        .products-section { padding: 100px 5%; }
+        /* --- Product Section --- */
+        .products-section { padding: 80px 5%; }
         .section-title { font-family: 'Syncopate', sans-serif; font-size: 2.5rem; text-align: center; margin-bottom: 60px; letter-spacing: 2px; }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+        
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 25px; 
         }
 
         .product-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
+            border-radius: 24px;
             padding: 30px 20px;
             text-align: center;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-
-        .product-card:hover { transform: translateY(-10px); border-color: var(--primary-red); box-shadow: 0 10px 30px rgba(230, 57, 70, 0.1); }
-        .product-img { width: 100%; height: 250px; object-fit: contain; margin-bottom: 20px; transition: transform 0.5s ease; }
+        .product-card:hover { transform: translateY(-10px); background: rgba(35, 35, 35, 0.4); }
+        .product-img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transition: 0.5s; }
         .product-card:hover .product-img { transform: scale(1.08); }
 
-        .product-category { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .product-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; }
-        .product-price { font-size: 1.4rem; font-weight: 800; color: var(--primary-red); margin-bottom: 20px; }
+        .product-category { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .product-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; }
+        .product-price { font-size: 1.3rem; font-weight: 800; color: var(--primary-red); margin-bottom: 20px; }
 
         .btn-outline {
-            background: transparent;
-            border: 1px solid var(--text-main);
-            color: var(--text-main);
-            padding: 10px 25px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
             width: 100%;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: auto;
         }
+        .btn-outline:hover { background: white; color: black; }
 
-        .btn-outline:hover { background: var(--text-main); color: var(--bg-color); }
+        /* --- Categories Section --- */
+        .categories { padding: 60px 5% 100px 5%; text-align: center; }
+        .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 50px; }
+        
+        .category-card {
+            padding: 40px;
+            border-radius: 20px;
+            transition: 0.4s;
+        }
+        .category-card:hover { transform: translateY(-5px); background: rgba(40, 40, 40, 0.4); }
 
-        .categories { padding: 80px 5%; text-align: center; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 50px; }
-        .category-card { background: var(--card-bg); padding: 40px; border: 1px solid var(--glass-border); transition: 0.4s; border-radius: 8px; }
-        .category-card:hover { border-color: var(--primary-red); transform: translateY(-5px); }
-
-        /* --- Footer --- */
+        /* --- Footer & Branding --- */
         footer {
-            background: #000;
             padding: 80px 5% 40px;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(20px);
             border-top: 1px solid var(--glass-border);
+            text-align: center;
         }
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .footer-col h4 {
-            color: var(--primary-red);
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            font-family: 'Syncopate', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-        }
-
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 60px; text-align: left;}
+        .footer-col h4 { color: var(--primary-red); margin-bottom: 25px; text-transform: uppercase; font-family: 'Syncopate', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
         .footer-col p, .footer-col a { color: var(--text-muted); text-decoration: none; display: block; margin-bottom: 12px; font-size: 0.9rem; transition: 0.3s; }
         .footer-col a:hover { color: var(--primary-red); }
 
-        .footer-bottom { text-align: center; padding-top: 40px; border-top: 1px solid var(--glass-border); color: #444; font-size: 0.8rem; }
+        .footer-link { color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .footer-link:hover { color: var(--primary-red); }
 
-        /* --- Mobile Responsive --- */
+        .footer-bottom {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--glass-border);
+            color: #555;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* =========================================
+           MOBILE RESPONSIVE OPTIMIZATION
+           ========================================= */
+        @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
         @media (max-width: 768px) {
-            .hamburger { display: flex; }
+            header { padding: 12px 5%; justify-content: space-between; }
+            .logo-img { height: 26px; }
+            .typewriter-text { font-size: 0.75rem; letter-spacing: 0.5px; }
+            
+            .hamburger { display: flex; gap: 5px; margin-left: 10px; }
+            .hamburger span { width: 24px; height: 2px; }
+
             .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 250px;
-                height: 100vh;
-                background: #0d0d0d;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 40px;
-                transition: 0.4s ease-in-out;
-                border-left: 1px solid var(--glass-border);
+                position: fixed; top: 0; right: -100%;
+                width: 280px; height: 100vh;
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(25px);
+                flex-direction: column; align-items: center; justify-content: center; gap: 40px;
+                transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); border-left: 1px solid var(--glass-border);
             }
-            .nav-links.active { right: 0; }
-            .nav-links a { font-size: 1.2rem; }
-            .typewriter-text { font-size: 0.9rem; }
-            .logo-img { height: 30px; }
-            .hero-content h1 { font-size: 2.8rem; letter-spacing: 1px; }
-            .hero-content p { font-size: 1rem; padding: 0 10px; }
-            .section-title { font-size: 2rem; }
-            .about-text h2 { font-size: 2rem; }
-            .products-section, .about-section, .categories { padding: 60px 5%; }
-            .about-section { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-            footer { padding: 50px 5% 30px; text-align: center; }
+            .nav-links.active { right: 0; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+            
+            .hero-content { padding: 0 15px; }
+            .hero-content h1 { font-size: 2rem !important; margin-bottom: 15px; }
+            .hero-content p { font-size: 0.9rem; padding: 0 10px; margin-bottom: 25px; }
+            .btn { padding: 12px 25px; font-size: 0.8rem; border-radius: 8px;}
+
+            .brands-section { padding: 25px 0; }
+            .brand-title { font-size: 0.85rem; margin-bottom: 15px; }
+            .brand-logo { height: 30px; margin: 0 20px; }
+
+            .stats-bar { padding: 20px 5%; margin: 20px 5%; gap: 10px; }
+            .stat-item h2 { font-size: 1.4rem; }
+            .stat-item p { font-size: 0.55rem; }
+
+            .about-section { grid-template-columns: 1fr; text-align: center; padding: 50px 5%; gap: 30px;}
+            .about-text h2 { font-size: 1.7rem; }
+            .about-text p { font-size: 0.9rem; }
+
+            .section-title { font-size: 1.7rem; margin-bottom: 30px; }
+            
+            .products-section { padding: 50px 5%; }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .product-card { padding: 15px 10px; border-radius: 16px; }
+            .product-img { height: 100px; margin-bottom: 10px; }
+            .product-title { font-size: 0.75rem; margin-bottom: 5px; height: 35px; overflow: hidden; }
+            .product-price { font-size: 0.95rem; margin-bottom: 12px; }
+            .btn-outline { padding: 8px 5px; font-size: 0.7rem; border-radius: 8px;}
+
+            .categories { padding: 40px 5%; }
+            .grid-container { grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 25px;}
+            .category-card { padding: 20px 10px; border-radius: 16px; }
+            .category-card h3 { font-size: 0.9rem; }
+            .category-card p { font-size: 0.65rem; }
+
+            footer { padding: 40px 5% 30px; }
+            .footer-grid { text-align: center; gap: 30px; }
+            .footer-bottom { 
+                font-size: 0.75rem; 
+                padding-top: 20px; 
+                margin-top: 30px; 
+                padding-bottom: 10px;
+                line-height: 1.8;
+            }
         }
     </style>
 </head>
 <body>
+
+    <div class="liquid-bg">
+        <div class="liquid-orb orb-1"></div>
+        <div class="liquid-orb orb-2"></div>
+    </div>
 
     <header>
         <a href="#" class="logo-container">
@@ -344,9 +476,7 @@
         </a>
         
         <div class="hamburger" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
 
         <nav class="nav-links">
@@ -362,15 +492,45 @@
             <source src="banner.mp4" type="video/mp4">
         </video>
         <div class="hero-overlay"></div>
-
         <div class="hero-content reveal">
             <h1>Limitless<br>Performance</h1>
             <p>Premium grade supplements designed to push your limits. Fuel your workout with genuine products directly from top global brands.</p>
-            <a href="#products" class="btn">Explore Products</a>
+            <a href="#products" class="btn">Explore Store</a>
         </div>
     </section>
 
-    <div class="stats-bar">
+    <div class="brands-section">
+        <h4 class="brand-title">Trusted By Leading Brands</h4>
+        <div class="brands-slider">
+            <div class="brands-track">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="Optimum Nutrition">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="RAW">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="Dymatize">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="BSN">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="MuscleTech">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="MyProtein">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="Cellucor">
+                
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="Optimum Nutrition">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="RAW">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="Dymatize">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="BSN">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="MuscleTech">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="MyProtein">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="Cellucor">
+
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="Optimum Nutrition">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="RAW">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="Dymatize">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="BSN">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="MuscleTech">
+                <img src="https://www.stack3d.com/wp-content/uploads/2016/01/dymatize.jpg" class="brand-logo" alt="MyProtein">
+                <img src="https://logodownload.org/wp-content/uploads/2021/04/optimum-nutrition-logo-0.png" class="brand-logo" alt="Cellucor">
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-bar ios-glass">
         <div class="stat-item reveal">
             <h2>50+</h2>
             <p>Premium Products</p>
@@ -389,7 +549,7 @@
         <div class="about-image reveal">
             <img src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?q=80&w=2069&auto=format&fit=crop" style="width: 100%; border-radius: 8px;" alt="Gym">
         </div>
-        <div class="about-text reveal">
+        <div class="about-text reveal ios-glass" style="padding: 40px; border-radius: 24px;">
             <h2>Fueling Kandy's Elite</h2>
             <p>At <strong>Supplement Armour</strong>, we believe in performance without compromise. Located in the heart of Kandy, we provide athletes and fitness enthusiasts with high-quality supplements sourced directly from global leaders.</p>
             <p>From Whey Proteins to Pre-workouts and Fat Burners, our curated collection is designed for those who settle for nothing but the best.</p>
@@ -398,58 +558,143 @@
 
     <section class="products-section" id="products">
         <h2 class="section-title reveal">Top Sellers</h2>
-        
         <div class="product-grid">
-            <div class="product-card reveal">
-                <img src="https://target.scene7.com/is/image/Target/GUEST_04220bee-c885-4d45-9657-9896559920f1?wid=300&hei=300&fmt=pjpeg" alt="Whey Protein" class="product-img">
+            
+            <div class="product-card reveal ios-glass">
+                <img src="https://target.scene7.com/is/image/Target/GUEST_04220bee-c885-4d45-9657-9896559920f1?wid=300&hei=300&fmt=pjpeg" class="product-img">
                 <div class="product-category">Whey Protein</div>
-                <h3 class="product-title">Optimum Nutrition Gold Standard</h3>
+                <h3 class="product-title">ON Gold Standard</h3>
                 <div class="product-price">Rs. 24,500</div>
-                <button class="btn btn-outline" onclick="orderWhatsApp('Optimum Nutrition Gold Standard')">Order via WhatsApp</button>
+                <button class="btn-outline" onclick="orderWhatsApp('ON Gold Standard')">Order via WhatsApp</button>
             </div>
-
-            <div class="product-card reveal">
-                <img src="https://megapump.ie/cdn/shop/products/gold-creatine-300g-kevin-levrone.jpg?v=1662417936" alt="Creatine" class="product-img">
+            <div class="product-card reveal ios-glass">
+                <img src="https://megapump.ie/cdn/shop/products/gold-creatine-300g-kevin-levrone.jpg?v=1662417936" class="product-img">
                 <div class="product-category">Creatine</div>
                 <h3 class="product-title">Kevin Levrone Gold Creatine</h3>
                 <div class="product-price">Rs. 8,900</div>
-                <button class="btn btn-outline" onclick="orderWhatsApp('Kevin Levrone Gold Creatine')">Order via WhatsApp</button>
+                <button class="btn-outline" onclick="orderWhatsApp('Kevin Levrone Gold Creatine')">Order via WhatsApp</button>
             </div>
-
-            <div class="product-card reveal">
-                <img src="https://ifit-eg.com/wp-content/uploads/2024/01/Cellucor_C4Original_GreenApple_30Servings-min1.png" alt="Pre-Workout" class="product-img">
+            <div class="product-card reveal ios-glass">
+                <img src="https://ifit-eg.com/wp-content/uploads/2024/01/Cellucor_C4Original_GreenApple_30Servings-min1.png" class="product-img">
                 <div class="product-category">Pre-Workout</div>
                 <h3 class="product-title">C4 Original Pre Workout</h3>
                 <div class="product-price">Rs. 11,200</div>
-                <button class="btn btn-outline" onclick="orderWhatsApp('C4 Original Pre Workout')">Order via WhatsApp</button>
+                <button class="btn-outline" onclick="orderWhatsApp('C4 Original Pre Workout')">Order via WhatsApp</button>
             </div>
-            
-            <div class="product-card reveal">
-                <img src="https://m.media-amazon.com/images/I/61chnopQdRL.jpg" alt="Mass Gainer" class="product-img">
+            <div class="product-card reveal ios-glass">
+                <img src="https://m.media-amazon.com/images/I/61chnopQdRL.jpg" class="product-img">
                 <div class="product-category">Mass Gainer</div>
                 <h3 class="product-title">Serious Mass Gainer</h3>
                 <div class="product-price">Rs. 28,000</div>
-                <button class="btn btn-outline" onclick="orderWhatsApp('Serious Mass Gainer')">Order via WhatsApp</button>
+                <button class="btn-outline" onclick="orderWhatsApp('Serious Mass Gainer')">Order via WhatsApp</button>
             </div>
+            
+            <div class="product-card reveal ios-glass">
+                <img src="https://target.scene7.com/is/image/Target/GUEST_04220bee-c885-4d45-9657-9896559920f1?wid=300&hei=300&fmt=pjpeg" class="product-img">
+                <div class="product-category">Whey Protein</div>
+                <h3 class="product-title">Muscletech Nitro Tech</h3>
+                <div class="product-price">Rs. 22,000</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Muscletech Nitro Tech')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://megapump.ie/cdn/shop/products/gold-creatine-300g-kevin-levrone.jpg?v=1662417936" class="product-img">
+                <div class="product-category">Creatine</div>
+                <h3 class="product-title">Muscletech Platinum Creatine</h3>
+                <div class="product-price">Rs. 7,500</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Muscletech Platinum Creatine')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://ifit-eg.com/wp-content/uploads/2024/01/Cellucor_C4Original_GreenApple_30Servings-min1.png" class="product-img">
+                <div class="product-category">Fat Burner</div>
+                <h3 class="product-title">Lipo 6 Black Ultra</h3>
+                <div class="product-price">Rs. 9,800</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Lipo 6 Black Ultra')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://m.media-amazon.com/images/I/61chnopQdRL.jpg" class="product-img">
+                <div class="product-category">BCAA</div>
+                <h3 class="product-title">Xtend BCAA Original</h3>
+                <div class="product-price">Rs. 10,500</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Xtend BCAA Original')">Order via WhatsApp</button>
+            </div>
+            
+            <div class="product-card reveal ios-glass">
+                <img src="https://target.scene7.com/is/image/Target/GUEST_04220bee-c885-4d45-9657-9896559920f1?wid=300&hei=300&fmt=pjpeg" class="product-img">
+                <div class="product-category">Isolate Protein</div>
+                <h3 class="product-title">Dymatize ISO 100</h3>
+                <div class="product-price">Rs. 29,000</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Dymatize ISO 100')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://megapump.ie/cdn/shop/products/gold-creatine-300g-kevin-levrone.jpg?v=1662417936" class="product-img">
+                <div class="product-category">Creatine</div>
+                <h3 class="product-title">ON Micronized Creatine</h3>
+                <div class="product-price">Rs. 8,200</div>
+                <button class="btn-outline" onclick="orderWhatsApp('ON Micronized Creatine')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://ifit-eg.com/wp-content/uploads/2024/01/Cellucor_C4Original_GreenApple_30Servings-min1.png" class="product-img">
+                <div class="product-category">Pre-Workout</div>
+                <h3 class="product-title">Ghost Legend</h3>
+                <div class="product-price">Rs. 13,000</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Ghost Legend')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://m.media-amazon.com/images/I/61chnopQdRL.jpg" class="product-img">
+                <div class="product-category">Mass Gainer</div>
+                <h3 class="product-title">Mutant Mass Gainer</h3>
+                <div class="product-price">Rs. 26,500</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Mutant Mass Gainer')">Order via WhatsApp</button>
+            </div>
+            
+            <div class="product-card reveal ios-glass">
+                <img src="https://target.scene7.com/is/image/Target/GUEST_04220bee-c885-4d45-9657-9896559920f1?wid=300&hei=300&fmt=pjpeg" class="product-img">
+                <div class="product-category">Casein Protein</div>
+                <h3 class="product-title">ON Gold Casein</h3>
+                <div class="product-price">Rs. 25,000</div>
+                <button class="btn-outline" onclick="orderWhatsApp('ON Casein')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://megapump.ie/cdn/shop/products/gold-creatine-300g-kevin-levrone.jpg?v=1662417936" class="product-img">
+                <div class="product-category">Multivitamin</div>
+                <h3 class="product-title">Opti-Men Multivitamin</h3>
+                <div class="product-price">Rs. 6,800</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Opti-Men Multivitamin')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://ifit-eg.com/wp-content/uploads/2024/01/Cellucor_C4Original_GreenApple_30Servings-min1.png" class="product-img">
+                <div class="product-category">Fat Burner</div>
+                <h3 class="product-title">Animal Cuts</h3>
+                <div class="product-price">Rs. 14,500</div>
+                <button class="btn-outline" onclick="orderWhatsApp('Animal Cuts')">Order via WhatsApp</button>
+            </div>
+            <div class="product-card reveal ios-glass">
+                <img src="https://m.media-amazon.com/images/I/61chnopQdRL.jpg" class="product-img">
+                <div class="product-category">Amino Acids</div>
+                <h3 class="product-title">BSN Amino X</h3>
+                <div class="product-price">Rs. 9,900</div>
+                <button class="btn-outline" onclick="orderWhatsApp('BSN Amino X')">Order via WhatsApp</button>
+            </div>
+
         </div>
     </section>
 
     <section class="categories">
         <h2 class="section-title reveal">Product Categories</h2>
         <div class="grid-container">
-            <div class="category-card reveal">
+            <div class="category-card reveal ios-glass">
                 <h3>Proteins</h3>
                 <p style="color: var(--text-muted); margin-top: 10px;">Isolates, Whey & Blends</p>
             </div>
-            <div class="category-card reveal">
+            <div class="category-card reveal ios-glass">
                 <h3>Performance</h3>
                 <p style="color: var(--text-muted); margin-top: 10px;">Creatine & Pre-workouts</p>
             </div>
-            <div class="category-card reveal">
+            <div class="category-card reveal ios-glass">
                 <h3>Weight Management</h3>
                 <p style="color: var(--text-muted); margin-top: 10px;">Fat Burners & Gainers</p>
             </div>
-            <div class="category-card reveal">
+            <div class="category-card reveal ios-glass">
                 <h3>Wellness</h3>
                 <p style="color: var(--text-muted); margin-top: 10px;">Multivitamins & Aminos</p>
             </div>
@@ -479,39 +724,29 @@
                 <a href="#">WhatsApp</a>
             </div>
         </div>
+        
         <div class="footer-bottom">
-            &copy; 2026 Supplement Armour LK. Developed by Drag Drop Studio (A Product of Moon).
+            <span style="display: inline-block; margin-right: 5px;">&copy; 2026 Supplement Armour LK.</span>
+            <span style="display: inline-block; white-space: nowrap;">Developed by <a href="http://www.pixlanka.com" target="_blank" class="footer-link">Pix Lanka</a>.</span>
         </div>
     </footer>
 
     <script>
         function toggleMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+            document.querySelector('.hamburger').classList.toggle('active');
         }
-
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px"
-        };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("active");
-                }
+                if (entry.isIntersecting) entry.target.classList.add("active");
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        document.querySelectorAll('.reveal').forEach((el) => {
-            observer.observe(el);
-        });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
         function orderWhatsApp(productName) {
-            var phoneNumber = "94702297996"; 
-            var message = "Hello Supplement Armour, I would like to order: " + productName;
-            var whatsappUrl = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
-            window.open(whatsappUrl, '_blank');
+            window.open("https://wa.me/94702297996?text=I want to order: " + productName, '_blank');
         }
     </script>
 </body>
